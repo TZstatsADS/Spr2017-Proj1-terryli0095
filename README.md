@@ -8,10 +8,12 @@ This is the first and only *individual* (as opposed to *team*) this semester.
 
 Term: Spring 2017
 
-+ Projec title: Lorem ipsum dolor sit amet
-+ This project is conducted by [your name]
++ Projec title: Finding bipartisanship
++ This project is conducted by Junhe Li
 
-+ Project summary: [a short summary] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project summary: 
+
+With recent development in our increasingly polarized political landscape, There's rightly been a lot of attention paid to the divide between the two major parties in hopes of possible bipartisan legislations and actions. To better understand this divide between the parties. it may be helpful to learn a bit more about the difference and similarities between the parties since the dawn of their existence. 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 

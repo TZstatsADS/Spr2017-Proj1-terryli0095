@@ -1,0 +1,193 @@
+---
+title: "Finding Bipartisanshup"
+output: html_notebook
+---
+
+```{r echo = FALSE}
+packages.used=c("tm", "wordcloud", "RColorBrewer", 
+                "dplyr", "tidytext")
+
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used, 
+                        intersect(installed.packages()[,1], 
+                                  packages.used))
+# install additional packages
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE,
+                   repos='http://cran.us.r-project.org')
+}
+#load packages
+library(tm)
+library(wordcloud)
+library(RColorBrewer)
+library(dplyr)
+library(tidytext)
+
+folder.path="/Users/Terry/Documents/Project_1/data/InauguralSpeeches/"
+speeches=list.files(path = folder.path, pattern = "*.txt")
+prex.out=substr(speeches, 6, nchar(speeches)-4)
+
+source <- DirSource(folder.path) #set up a source for text documents
+#collect documents in corpus
+ff.all<-Corpus(source)
+ff.all <- tm_map(ff.all,
+                     content_transformer(function(x) iconv(x, to='UTF-8-MAC', sub='byte')),
+                     mc.cores=1)
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+
+ff.all<-tm_map(ff.all, removeWords, stopwords("english"))
+
+
+tdm.all<-TermDocumentMatrix(ff.all)
+tdm.tidy=tidy(tdm.all)
+
+
+tdm.overall=summarise(group_by(tdm.tidy, term), sum(count))
+
+
+
+wordcloud(tdm.overall$term, tdm.overall$`sum(count)`,
+          scale=c(5,0.5),
+          max.words=100,
+          min.freq=0,
+          random.order=FALSE,
+          rot.per=0.3,
+          use.r.layout=T,
+          random.color=FALSE,
+          colors=brewer.pal(9,"Blues"))
+
+```
+
+With recent development in our increasingly polarized political landscape, There's rightly been a lot of attention paid to the divide between the two major parties in hopes of possible bipartisan legislations and actions. To better understand this divide between the parties. it may be helpful to learn a bit more about the difference and similarities between the parties since the dawn of their existence. 
+In the following exercise, I first look at the length of each speech as well as the average length of words in each speech to see if there are any significant results.Then I conduct sentiment analysis on all Inaugural Speeches.
+
+
+To begin we must load the data and do initial data cleaning.
+```{r include=FALSE}
+setwd("/Users/Terry/Documents/Project_1")
+```
+
+```{r message= FALSE, warning=FALSE}
+packages.used=c("tm", "wordcloud", "RColorBrewer", 
+                "dplyr", "tidytext")
+
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used, 
+                        intersect(installed.packages()[,1], 
+                                  packages.used))
+# install additional packages
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE,
+                   repos='http://cran.us.r-project.org')
+}
+#load packages
+library(tm)
+library(wordcloud)
+library(RColorBrewer)
+library(dplyr)
+library(tidytext)
+
+```
+
+```{r message= FALSE, warning=FALSE}
+folder.path="/Users/Terry/Documents/Project_1/data/InauguralSpeeches/"
+speeches=list.files(path = folder.path, pattern = "*.txt")
+prex.out=substr(speeches, 6, nchar(speeches)-4)
+
+source <- DirSource(folder.path) #set up a source for text documents
+#collect documents in corpus
+ff.all<-Corpus(source)
+
+```
+
+```{r}
+#load dates info as well as party info
+dates.path <- "/Users/Terry/Documents/Project_1/data/InauguralSpeeches/InauguationDates2.txt"
+info.path <- "/Users/Terry/Documents/Project_1/data/InauguralSpeeches/InaugurationInfo_csv.csv"
+inaug.dates <- read.table(dates.path ,header = FALSE,fill = TRUE)
+inaug.info <- read.csv(info.path ,header = TRUE,fill = TRUE,skipNul = TRUE)
+
+```
+
+As part of data cleaning, I try to remove punctuations, numbers, extra white spaces, and common stop words ("the", "a", "for"...) . And then convert the corpus into readable and workable format.
+```{r}
+ff.all <- tm_map(ff.all,
+                     content_transformer(function(x) iconv(x, to='UTF-8-MAC', sub='byte')),
+                     mc.cores=1)
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+ff.all <- tm_map(ff.all, toSpace, "-")
+ff.all <- tm_map(ff.all, toSpace, ":")
+ff.all <- tm_map(ff.all, toSpace, ", ")
+ff.all <- tm_map(ff.all, toSpace, ". ")
+ff.all <- tm_map(ff.all, removeNumbers)
+ff.all <- tm_map(ff.all, removePunctuation)
+ff.all <- tm_map(ff.all , stripWhitespace)
+ff.all <- tm_map(ff.all, content_transformer(tolower))
+ff.all<-tm_map(ff.all, removeWords, character(0))
+ff.all<-tm_map(ff.all, removeWords, stopwords("english"))
+
+
+#ff.all_stemmed<-tm_map(ff.all, removeWords, stopwords("english"))
+#ff.all_stemmed <-  tm_map(ff.all_stemmed,stemDocument)
+
+tdm.all<-TermDocumentMatrix(ff.all)
+tdm.tidy=tidy(tdm.all)
+tdm.all<-as.matrix(TermDocumentMatrix(ff.all))
+
+
+tdm.overall=summarise(group_by(tdm.tidy, term), sum(count))
+
+```
+
+```{r}
+
+unique_speeches= unique(tdm.tidy$document)
+length_summary= data.frame(unique_speeches)
+length_summary$words_reduced=summarise (group_by(tdm.tidy, document),sum(count))[,2]
+tdm.tidy$length = nchar(tdm.tidy$term) * tdm.tidy$count
+length_summary$chr_length = summarise (group_by(tdm.tidy, document),sum(length))[,2]
+length_summary$avg_length = length_summary$chr_length/length_summary$words_reduced
+
+length_summary$File <- substr(length_summary$unique_speeches,6,regexpr("-",length_summary$unique_speeches)-1)
+length_summary<-length_summary[!(is.na(length_summary$File) | length_summary$File==""), ]
+
+
+
+```
+The point of analyzing the length of the length of speeches and words across two parties is that in doing so, we hope to gain some insight into some characteristic of what the party value and what the president is like at the time. 
+If the president is found to use very long words, then potentially, he might a little less approachable to the public. If the there's a significant difference between total word length and
+reduced word length (after removing typical English stop words), then the president might be considered long winded in speaking style. 
+
+```{r}
+#logistic regressions
+inaug.info.modern <- filter(inaug.info,inaug.info$Party == "Democratic" | inaug.info$Party == "Republican" )
+#take care of grover cleveland case "-I" or "-II"
+inaug.info.modern$File <- paste0(inaug.info.modern$File,"-")
+inaug.info.modern$File <-substr(inaug.info.modern$File,1,regexpr("-",inaug.info.modern$File)-1)
+#left join with the avg word length data
+inaug.info.modern<-left_join(inaug.info.modern, length_summary)
+
+#set up indicator variable for regression
+inaug.info.modern$indicate <- ifelse(inaug.info.modern$Party =="Democratic", 1,0)
+
+model_word_count <- glm(inaug.info.modern$indicate ~ as.numeric(inaug.info.modern$Words),family=binomial(link='logit'),data=inaug.info.modern)
+
+model_reduced_word_count<-glm(inaug.info.modern$indicate ~ as.numeric(unlist(inaug.info.modern$words_reduced)),family=binomial(link='logit'),data=inaug.info.modern)
+
+model_avg_word_length<-glm(inaug.info.modern$indicate ~ as.numeric(unlist(inaug.info.modern$avg_length)),family=binomial(link='logit'),data=inaug.info.modern)
+print("logistic regression done with total word count as predictor variable and the party as indicator variable")
+print(model_word_count)
+print("logistic regression done with word count (after removing stop words from library) as predictor variable and the party as indicator variable")
+print(model_reduced_word_count)
+print("logistic regression done with average word length for each word as predictor variable and the party as indicator variable")
+print(model_avg_word_length)
+
+```
+As we can see from the high deviance values, there's significant difference between two parties in terms of length of speech. This of course is largely due to the fact that the ideology of the two parties has not been constant for the past 200 hundred years. What used to be a Republican feature may very well be a now democratic characteristic. 
+
+```{r}
+get_sentiments("afinn")
+tdm.tidy_trump= filter(tdm.tidy, tdm.tidy$document == 'inaugDonaldJTrump-1.txt')
+
+```
+Unfortunately, due to the unforseen lack of time this week, I was not able to conduct the analysis that I wanted. My original goal was to conduct sentiment analysis

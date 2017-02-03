@@ -1,0 +1,47 @@
+
+PRESIDENT	FIRST	SECOND	THIRD	FOURTH
+GeorgeWashington	4/30/1789	3/4/1793		
+JohnAdams	3/4/1797			
+ThomasJefferson	3/4/1801	3/4/1805		
+JamesMadison	3/4/1809	3/4/1813		
+JamesMonroe	3/4/1817	3/5/1821		
+JohnQuincyAdams	3/4/1825			
+AndrewJackson	3/4/1829	3/4/1833		
+MartinVanBuren	3/4/1837			
+WilliamHenryHarrison	3/4/1841			
+JohnTyler	4/6/1841			
+JamesKnoxPolk	3/4/1845			
+ZacharyTaylor	3/5/1849			
+MillardFillmore	7/10/1850			
+FranklinPierce	3/4/1853			
+JamesBuchanan	3/4/1857			
+AbrahamLincoln	3/4/1861	3/4/1865		
+AndrewJohnson	4/15/1865			
+UlyssesSGrant	3/4/1869	3/4/1873		
+RutherfordBHayes	3/5/1877			
+JamesAGarfield	3/4/1881			
+ChesterArthur	9/20/1881			
+GroverCleveland	3/4/1885			
+BenjaminHarrison	3/4/1889			
+GroverCleveland		3/4/1893		
+WilliamMcKinley	3/4/1897	3/4/1901		
+TheodoreRoosevelt	9/14/1901	3/4/1905		
+WilliamHowardTaft	3/4/1909			
+WoodrowWilson	3/4/1913	3/5/1917		
+WarrenGHarding	3/4/1921			
+CalvinCoolidge	8/3/1923	3/4/1925		
+HerbertHoover	3/4/1929			
+FranklinDRoosevelt	3/4/1933	1/20/1937	1/20/1941	1/20/1945
+HarrySTruman	4/12/1945	1/20/1949		
+DwightDEisenhower	1/20/1953	1/21/1957		
+JohnFKennedy	1/20/1961			
+LyndonBJohnson	11/22/1963	1/20/1965		
+RichardMNixon	1/20/1969	1/20/1973		
+GeraldRFord	8/9/1974			
+JimmyCarter	1/20/1977			
+RonaldReagan	1/20/1981	1/21/1985		
+GeorgeBush	1/20/1989			
+WilliamJClinton	1/20/1993	1/20/1997		
+GeorgeWBush	1/20/2001	1/20/2005		
+BarackObama	1/20/2009	1/21/2013		
+DonaldJTrump	1/20/2017			
